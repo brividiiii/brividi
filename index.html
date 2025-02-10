@@ -124,86 +124,35 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
-            z-index: 1000;
-            animation: popIn 0.5s ease-out;
-            display: none;
-        }
-
-        @keyframes popIn {
-            0% {
-                transform: translate(-50%, -50%) scale(0);
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-            }
-        }
-
-        /* Stili per effetti di vittoria più spettacolari */
-        .confetti {
-            position: fixed;
-            pointer-events: none;
-            z-index: 999;
-            animation: fall 3s linear forwards;
-        }
-
-        @keyframes fall {
-            0% {
-                transform: translateY(-100vh) rotate(0deg);
-            }
-            100% {
-                transform: translateY(100vh) rotate(360deg);
-            }
-        }
-
-        .star {
-            position: fixed;
-            pointer-events: none;
-            z-index: 999;
-            animation: shooting 1s linear forwards;
-        }
-
-        @keyframes shooting {
-            0% {
-                transform: translateX(-100px) translateY(0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateX(200px) translateY(200px) rotate(180deg);
-                opacity: 0;
-            }
-        }
-
-        .winner-announcement {
             background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
             color: white;
             font-size: 1.5em;
             padding: 30px;
             border: 3px solid white;
-            animation: glow 2s infinite;
-        }
-
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.5); }
-            50% { box-shadow: 0 0 40px rgba(255,255,255,0.8); }
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            animation: popIn 0.5s ease-out, glow 2s infinite;
+            display: none;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
         }
 
         .winner-name {
-            font-size: 2.5em;
+            font-size: 2em;
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            animation: bounce 0.5s infinite alternate;
-            white-space: normal;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
+            margin: 20px 0;
+            display: block;
+            position: relative;
+            transform: none;
+            animation: pulse 1s infinite alternate;
         }
 
-        @keyframes bounce {
-            0%   { transform: translate(-50%, -50%) scale(1); }
-            100% { transform: translate(-50%, -50%) scale(1.05); }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
         }
 
         .victory-overlay {
@@ -246,14 +195,14 @@
             }
             
             .winner-announcement {
-                width: 90%;
-                padding: 15px;
+                padding: 20px;
+                width: 85%;
+                font-size: 1.2em;
             }
             
             .winner-name {
-                font-size: 2em;
-                transform: none;
-                left: auto;
+                font-size: 1.8em;
+                margin: 15px 0;
             }
         }
 
@@ -581,10 +530,12 @@
             const announcement = document.getElementById('winner-announcement');
             announcement.style.display = 'block';
             announcement.innerHTML = `
-                <h2>VITTORIA! 🎉</h2>
+                <h2>�� VITTORIA! 🎉</h2>
                 <div class="winner-name">${winner}</div>
                 <p>Ha trionfato nella sfida della settimana!</p>
-                ${winner === 'Camilla' ? '👑 La Principessa Regna Suprema! 👑' : '🏍️ Il Campione delle Due Ruote! 🏍️'}
+                ${winner === 'Camilla' 
+                    ? '<div style="margin-top: 10px">👑 La Principessa Regna Suprema! 👑</div>' 
+                    : '<div style="margin-top: 10px">🏍️ Il Campione delle Due Ruote! 🏍️</div>'}
             `;
         }
 
