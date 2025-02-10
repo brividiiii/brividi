@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sfida Luca vs Camilla</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            margin: 50px auto;
+            max-width: 800px;
+        }
+        .player {
+            padding: 20px;
+            border-radius: 15px;
+            width: 300px;
+        }
+        .camilla {
+            background-color: #ffb6c1;
+            box-shadow: 0 0 10px rgba(255, 182, 193, 0.5);
+        }
+        .luca {
+            background-color: #add8e6;
+            box-shadow: 0 0 10px rgba(173, 216, 230, 0.5);
+        }
+        .icon {
+            font-size: 48px;
+            margin: 10px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        h2 {
+            margin: 10px 0;
+        }
+        .vs {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 20px;
+            align-self: center;
+        }
+        .gara-item {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .buttons {
+            margin-top: 10px;
+        }
+        .win-button {
+            padding: 5px 10px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .camilla-btn {
+            background-color: #ffb6c1;
+        }
+        .camilla-btn:hover {
+            background-color: #ff9eb6;
+        }
+        .luca-btn {
+            background-color: #add8e6;
+        }
+        .luca-btn:hover {
+            background-color: #8cc5db;
+        }
+        .winner {
+            font-weight: bold;
+            margin-top: 5px;
+            color: #2e7d32;
+        }
+        .firework {
+            position: fixed;
+            pointer-events: none;
+            z-index: 999;
+            animation: firework 1s ease-out forwards;
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            animation: particle 1s ease-out forwards;
+        }
+
+        @keyframes firework {
+            0% {
+                transform: translate(-50%, -50%);
+                width: 0px;
+                opacity: 1;
+            }
+            100% {
+                width: 400px;
+                opacity: 0;
+            }
+        }
+
+        @keyframes particle {
+            0% {
+                transform: translate(-50%, -50%);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--x), var(--y));
+                opacity: 0;
+            }
+        }
+
+        .winner-announcement {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            animation: popIn 0.5s ease-out;
+            display: none;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        /* Stili per effetti di vittoria più spettacolari */
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+            z-index: 999;
+            animation: fall 3s linear forwards;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        .star {
+            position: fixed;
+            pointer-events: none;
+            z-index: 999;
+            animation: shooting 1s linear forwards;
+        }
+
+        @keyframes shooting {
+            0% {
+                transform: translateX(-100px) translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(200px) translateY(200px) rotate(180deg);
+                opacity: 0;
+            }
+        }
+
+        .winner-announcement {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            font-size: 1.5em;
+            padding: 30px;
+            border: 3px solid white;
+            animation: glow 2s infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.5); }
+            50% { box-shadow: 0 0 40px rgba(255,255,255,0.8); }
+        }
+
+        .winner-name {
+            font-size: 2.5em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: bounce 0.5s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translate(-50%, -50%) scale(1); }
+            to { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .victory-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent, rgba(0,0,0,0.3));
+            z-index: 998;
+            pointer-events: none;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Miglioramenti per il mobile */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                margin: 20px auto;
+            }
+            
+            .player {
+                width: 90%;
+                margin: 10px auto;
+            }
+            
+            .vs {
+                margin: 10px;
+            }
+            
+            .win-button {
+                padding: 12px 20px;  /* Bottoni più grandi per il touch */
+                margin: 5px;
+                font-size: 16px;
+            }
+            
+            .winner-announcement {
+                width: 90%;
+                padding: 15px;
+            }
+            
+            .winner-name {
+                font-size: 2em;
+            }
+        }
+
+        /* Nuovi effetti per le vittorie singole */
+        .victory-flash {
+            animation: flash 0.5s ease-out;
+        }
+
+        @keyframes flash {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .trophy {
+            font-size: 40px;
+            position: fixed;
+            animation: flyIn 1s ease-out forwards;
+            z-index: 1000;
+        }
+
+        @keyframes flyIn {
+            0% { 
+                transform: translate(-100vw, -100vh) rotate(-180deg); 
+                opacity: 0;
+            }
+            100% { 
+                transform: translate(var(--finalX), var(--finalY)) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        /* Stile migliorato per i vincitori delle singole gare */
+        .winner-single {
+            background: linear-gradient(45deg, var(--winner-color-1), var(--winner-color-2));
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .reset-button {
+            background-color: #ff4444;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 20px;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .reset-button:hover {
+            background-color: #cc0000;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .reset-button {
+                padding: 15px 30px;
+                font-size: 18px;
+                margin: 15px auto;
+                display: block;
+                width: 90%;
+                max-width: 300px;
+            }
+        }
+
+        /* Ottimizzazioni specifiche per iOS */
+        @supports (-webkit-touch-callout: none) {
+            .win-button {
+                -webkit-tap-highlight-color: transparent;
+                padding: 15px 25px;  /* Bottoni più grandi per iOS */
+                margin: 8px;
+            }
+
+            .container {
+                padding-bottom: env(safe-area-inset-bottom);  /* Supporto per iPhone X e successivi */
+            }
+
+            .reset-button {
+                padding: 18px 30px;  /* Bottone reset più grande su iOS */
+                -webkit-appearance: none;  /* Rimuove stile default iOS */
+                margin-bottom: env(safe-area-inset-bottom);
+            }
+
+            .winner-announcement {
+                padding-bottom: env(safe-area-inset-bottom);
+                width: 85%;  /* Leggermente più stretto su iOS */
+            }
+        }
+
+        /* Miglioramenti per schermi piccoli */
+        @media (max-width: 375px) {  /* iPhone SE e simili */
+            .player {
+                width: 85%;
+                padding: 15px;
+            }
+
+            .icon {
+                font-size: 40px;
+            }
+
+            .buttons {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .win-button {
+                width: 80%;
+                max-width: 250px;
+            }
+        }
+
+        /* Previeni lo zoom su input su iOS */
+        @media screen and (-webkit-min-device-pixel-ratio: 0) { 
+            select,
+            textarea,
+            input,
+            button {
+                font-size: 16px;  /* Previene lo zoom automatico su iOS */
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>La Grande Sfida della Settimana</h1>
+    
+    <div class="container">
+        <div class="player camilla">
+            <div class="icon">👑</div>
+            <h2>Camilla</h2>
+            <p>La Principessa</p>
+            <div class="score">
+                Punteggio: <span id="camilla-score">0</span>
+            </div>
+        </div>
+
+        <div class="vs">VS</div>
+
+        <div class="player luca">
+            <div class="icon">🏍️</div>
+            <h2>Luca</h2>
+            <p>Il Motociclista</p>
+            <div class="score">
+                Punteggio: <span id="luca-score">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="gare">
+        <h3>Gare della settimana:</h3>
+        <ul style="list-style: none; padding: 0;">
+            <li class="gara-item">
+                <div>🎯 Gara 1: Sfida di Freccette</div>
+                <div class="buttons">
+                    <button class="win-button camilla-btn" onclick="setWinner(0, 'Camilla')">Vince Camilla</button>
+                    <button class="win-button luca-btn" onclick="setWinner(0, 'Luca')">Vince Luca</button>
+                </div>
+                <div id="winner-0" class="winner"></div>
+            </li>
+            <li class="gara-item">
+                <div>🎤 Gara 2: FantaSanremo</div>
+                <div class="buttons">
+                    <button class="win-button camilla-btn" onclick="setWinner(1, 'Camilla')">Vince Camilla</button>
+                    <button class="win-button luca-btn" onclick="setWinner(1, 'Luca')">Vince Luca</button>
+                </div>
+                <div id="winner-1" class="winner"></div>
+            </li>
+            <li class="gara-item">
+                <div>👕 Gara 3: Sfida del Completino</div>
+                <div class="buttons">
+                    <button class="win-button camilla-btn" onclick="setWinner(2, 'Camilla')">Vince Camilla</button>
+                    <button class="win-button luca-btn" onclick="setWinner(2, 'Luca')">Vince Luca</button>
+                </div>
+                <div id="winner-2" class="winner"></div>
+            </li>
+        </ul>
+    </div>
+
+    <button class="reset-button" onclick="resetGame()">🔄 Azzera Tutte le Sfide</button>
+
+    <div id="winner-announcement" class="winner-announcement"></div>
+
+    <script>
+        let camillaScore = 0;
+        let lucaScore = 0;
+        const winners = [null, null, null];
+
+        function createFirework(x, y, color) {
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.transform = `translate(${x}px, ${y}px)`;
+            firework.style.webkitTransform = `translate3d(${x}px, ${y}px, 0)`;
+
+            // Crea le particelle dei fuochi d'artificio
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.backgroundColor = color;
+                
+                // Calcola una direzione casuale per ogni particella
+                const angle = (i / 30) * 360;
+                const distance = Math.random() * 100 + 50;
+                const xMove = Math.cos(angle * Math.PI / 180) * distance;
+                const yMove = Math.sin(angle * Math.PI / 180) * distance;
+                
+                particle.style.setProperty('--x', xMove + 'px');
+                particle.style.setProperty('--y', yMove + 'px');
+                
+                firework.appendChild(particle);
+            }
+
+            document.body.appendChild(firework);
+            
+            // Rimuovi il fuoco d'artificio dopo l'animazione
+            setTimeout(() => {
+                firework.remove();
+            }, 1000);
+        }
+
+        function createConfetti(color) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * window.innerWidth + 'px';
+            confetti.style.width = '10px';
+            confetti.style.height = '10px';
+            confetti.style.backgroundColor = color;
+            confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => confetti.remove(), 3000);
+        }
+
+        function createStar(x, y) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = x + 'px';
+            star.style.top = y + 'px';
+            star.innerHTML = '⭐';
+            star.style.fontSize = '20px';
+            document.body.appendChild(star);
+            
+            setTimeout(() => star.remove(), 1000);
+        }
+
+        function createVictoryOverlay() {
+            const overlay = document.createElement('div');
+            overlay.className = 'victory-overlay';
+            document.body.appendChild(overlay);
+            
+            setTimeout(() => overlay.remove(), 5000);
+        }
+
+        function createTrophy(x, y, winner) {
+            const trophy = document.createElement('div');
+            trophy.className = 'trophy';
+            trophy.innerHTML = winner === 'Camilla' ? '👑' : '🏆';
+            trophy.style.setProperty('--finalX', x + 'px');
+            trophy.style.setProperty('--finalY', y + 'px');
+            document.body.appendChild(trophy);
+            
+            setTimeout(() => trophy.remove(), 2000);
+        }
+
+        function celebrateSingleWin(gameIndex, winner) {
+            const gara = document.querySelector(`#winner-${gameIndex}`).closest('.gara-item');
+            gara.classList.add('victory-flash');
+            
+            // Colori personalizzati per ogni giocatore
+            const colors = winner === 'Camilla' 
+                ? ['#ffb6c1', '#ff69b4']  // Rosa
+                : ['#add8e6', '#4169e1'];  // Blu
+
+            // Effetti per la vittoria singola
+            const winnerElement = document.getElementById(`winner-${gameIndex}`);
+            winnerElement.className = 'winner-single';
+            winnerElement.style.setProperty('--winner-color-1', colors[0]);
+            winnerElement.style.setProperty('--winner-color-2', colors[1]);
+            
+            // Crea trofei volanti
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * (window.innerHeight / 2);
+                    createTrophy(x, y, winner);
+                }, i * 300);
+            }
+
+            // Rimuovi la classe flash dopo l'animazione
+            setTimeout(() => {
+                gara.classList.remove('victory-flash');
+            }, 500);
+        }
+
+        function celebrateVictory(winner) {
+            const color = winner === 'Camilla' ? '#ffb6c1' : '#add8e6';
+            createVictoryOverlay();
+
+            // Crea una pioggia di coriandoli
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => createConfetti(color), i * 50);
+            }
+
+            // Crea stelle cadenti
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * window.innerHeight / 2;
+                    createStar(x, y);
+                }, i * 200);
+            }
+
+            // Aggiorna l'annuncio del vincitore con stile più appariscente
+            const announcement = document.getElementById('winner-announcement');
+            announcement.style.display = 'block';
+            announcement.innerHTML = `
+                <h2>VITTORIA! 🎉</h2>
+                <div class="winner-name">${winner}</div>
+                <p>Ha trionfato nella sfida della settimana!</p>
+                ${winner === 'Camilla' ? '👑 La Principessa Regna Suprema! 👑' : '🏍️ Il Campione delle Due Ruote! 🏍️'}
+            `;
+        }
+
+        function setWinner(gameIndex, winner) {
+            // Se c'era già un vincitore, sottrai il punto
+            if (winners[gameIndex]) {
+                if (winners[gameIndex] === 'Camilla') camillaScore--;
+                else lucaScore--;
+            }
+
+            // Aggiungi il punto al nuovo vincitore
+            winners[gameIndex] = winner;
+            if (winner === 'Camilla') camillaScore++;
+            else lucaScore++;
+
+            // Aggiorna i punteggi visualizzati
+            document.getElementById('camilla-score').textContent = camillaScore;
+            document.getElementById('luca-score').textContent = lucaScore;
+
+            // Aggiungi effetti per il vincitore
+            const color = winner === 'Camilla' ? '#ffb6c1' : '#add8e6';
+            
+            // Crea multipli fuochi d'artificio
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * (window.innerHeight / 2);
+                    createFirework(x, y, color);
+                }, i * 300);
+            }
+
+            // Aggiungi effetti per la vittoria singola
+            celebrateSingleWin(gameIndex, winner);
+
+            // Mostra il vincitore della gara con stile
+            const winnerElement = document.getElementById(`winner-${gameIndex}`);
+            winnerElement.innerHTML = `
+                <div class="winner-icon">${winner === 'Camilla' ? '👑' : '🏍️'}</div>
+                <div>Vittoria di ${winner}!</div>
+            `;
+
+            // Evidenzia il vincitore finale se tutte le gare sono completate
+            if (!winners.includes(null)) {
+                const finalWinner = camillaScore > lucaScore ? 'Camilla' : 
+                                  lucaScore > camillaScore ? 'Luca' : 'Pareggio';
+                
+                if (finalWinner !== 'Pareggio') {
+                    celebrateVictory(finalWinner);
+                } else {
+                    // Mostra un messaggio di pareggio più semplice
+                    const announcement = document.getElementById('winner-announcement');
+                    announcement.style.display = 'block';
+                    announcement.innerHTML = `
+                        <h2>🤝 PAREGGIO! 🤝</h2>
+                        <p>La sfida si è conclusa in parità!</p>
+                    `;
+                }
+
+                setTimeout(() => {
+                    document.getElementById('winner-announcement').style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Migliore gestione degli eventi touch per iOS
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.win-button, .reset-button');
+            
+            buttons.forEach(button => {
+                // Previeni il comportamento di default del touch
+                button.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Aggiungi feedback visivo
+                    this.style.opacity = '0.7';
+                }, { passive: false });
+
+                button.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    
+                    // Ripristina l'opacità
+                    this.style.opacity = '1';
+                    
+                    // Esegui il click dopo un breve delay per il feedback visivo
+                    setTimeout(() => {
+                        this.click();
+                    }, 50);
+                }, { passive: false });
+
+                // Gestisci il caso in cui il touch viene annullato
+                button.addEventListener('touchcancel', function() {
+                    this.style.opacity = '1';
+                });
+            });
+        });
+
+        // Previeni il bounce dello scroll su iOS
+        document.addEventListener('touchmove', function(e) {
+            if (document.querySelector('.winner-announcement').style.display === 'block') {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        function resetGame() {
+            // Chiedi conferma prima di resettare
+            if (confirm('Sei sicuro di voler azzerare tutte le sfide?')) {
+                // Resetta i punteggi
+                camillaScore = 0;
+                lucaScore = 0;
+                winners.fill(null);
+
+                // Aggiorna i punteggi visualizzati
+                document.getElementById('camilla-score').textContent = '0';
+                document.getElementById('luca-score').textContent = '0';
+
+                // Resetta tutti i vincitori delle singole gare
+                for (let i = 0; i < 3; i++) {
+                    const winnerElement = document.getElementById(`winner-${i}`);
+                    winnerElement.className = 'winner';
+                    winnerElement.textContent = '';
+                }
+
+                // Nascondi eventuali annunci di vittoria
+                document.getElementById('winner-announcement').style.display = 'none';
+
+                // Effetto visivo di reset
+                const gareItems = document.querySelectorAll('.gara-item');
+                gareItems.forEach(item => {
+                    item.style.animation = 'flash 0.5s ease-out';
+                    setTimeout(() => {
+                        item.style.animation = '';
+                    }, 500);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
