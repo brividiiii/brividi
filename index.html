@@ -196,11 +196,14 @@
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             animation: bounce 0.5s infinite alternate;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         @keyframes bounce {
-            from { transform: translate(-50%, -50%) scale(1); }
-            to { transform: translate(-50%, -50%) scale(1.1); }
+            0%   { transform: translate(-50%, -50%) scale(1); }
+            100% { transform: translate(-50%, -50%) scale(1.05); }
         }
 
         .victory-overlay {
@@ -249,6 +252,8 @@
             
             .winner-name {
                 font-size: 2em;
+                transform: none;
+                left: auto;
             }
         }
 
@@ -649,28 +654,24 @@
             const buttons = document.querySelectorAll('.win-button, .reset-button');
             
             buttons.forEach(button => {
-                // Previeni il comportamento di default del touch
+                // Rimuovo e.stopPropagation per non fermare la propagazione dell'evento
                 button.addEventListener('touchstart', function(e) {
                     e.preventDefault();
-                    e.stopPropagation();
-                    
-                    // Aggiungi feedback visivo
+                    // Niente e.stopPropagation(), così passano correttamente gli eventi
                     this.style.opacity = '0.7';
                 }, { passive: false });
 
                 button.addEventListener('touchend', function(e) {
-                    e.preventDefault();
-                    
-                    // Ripristina l'opacità
+                    // Rimuovo e.preventDefault() per consentire il "click" nativo
                     this.style.opacity = '1';
-                    
-                    // Esegui il click dopo un breve delay per il feedback visivo
+
+                    // Esegui comunque manualmente il click dopo un breve ritardo
                     setTimeout(() => {
                         this.click();
                     }, 50);
                 }, { passive: false });
 
-                // Gestisci il caso in cui il touch viene annullato
+                // Gestione annullamento del touch
                 button.addEventListener('touchcancel', function() {
                     this.style.opacity = '1';
                 });
